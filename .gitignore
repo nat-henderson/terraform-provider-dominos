@@ -1,0 +1,5 @@
+example.tf
+.terraform/*
+terraform-provider-dominos
+*tfstate*
+crash.log
