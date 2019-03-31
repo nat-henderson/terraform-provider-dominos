@@ -6,7 +6,9 @@ import (
     "net/http"
     "net/http/httputil"
     "time"
+    "io/ioutil"
     "encoding/json"
+    "encoding/xml"
     "strings"
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -175,13 +177,100 @@ func resourceOrderCreate(d *schema.ResourceData, m interface{}) error {
     if err != nil {
         return err
     }
+    orderid := order_response_obj["StoreOrderID"]
+    d.SetId(orderid.(string))
+    for status, err := getOrderStatus(client, config.PhoneNumber, d.Id()); err != nil || status != "Delivered"; {
+        if err != nil {
+            return err
+        }
+        time.Sleep(10 * time.Second)
+    }
     return nil
 }
 
+func getOrderStatus(client *http.Client, phonenumber, orderid string) (string, error) {
+    order, err := getOrder(client, phonenumber, orderid)
+    return order.OrderStatus, err
+}
+
+
+type Envelope struct {
+	XMLName xml.Name `xml:"Envelope"`
+	Body    Body     `xml:"Body"`
+}
+
+type Body struct {
+	XMLName         xml.Name        `xml:"Body"`
+	TrackerResponse TrackerResponse `xml:"GetTrackerDataResponse"`
+}
+
+type TrackerResponse struct {
+	XMLName       xml.Name      `xml:"GetTrackerDataResponse"`
+	OrderStatuses OrderStatuses `xml:"OrderStatuses"`
+}
+
+type OrderStatuses struct {
+	XMLName     xml.Name      `xml:"OrderStatuses"`
+	OrderStatus []OrderStatus `xml:"OrderStatus"`
+}
+
+type OrderStatus struct {
+	XMLName          xml.Name `xml:"OrderStatus"`
+	OrderStatus      string   `xml:"OrderStatus"`
+	OrderDescription string   `xml:"OrderDescription"`
+    OrderID          string   `xml:"OrderID"`
+	StartTime        string   `xml:"StartTime"`
+	ParsedStartTime  time.Time
+}
+
+func getOrder(client *http.Client, phonenumber, orderid string) (*OrderStatus, error) {
+    // hm.  easy to fetch, hard to process.
+    // grab out "soap:Envelope.soap:Body.GetTrackerDataResponse.OrderStatuses.[OrderStatus where OrderID = orderid]
+    r, err := client.Get(fmt.Sprintf("https://trkweb.dominos.com/orderstorage/GetTrackerData?Phone=%s", phonenumber))
+    if err != nil {
+        return nil, err
+    }
+    defer r.Body.Close()
+    resp := Envelope{}
+    b, err := ioutil.ReadAll(r.Body)
+    if err != nil {
+        return nil, err
+    }
+    err = xml.Unmarshal(b, &resp)
+    order := resp.Body.TrackerResponse.OrderStatuses.OrderStatus
+    for i := range order {
+        if order[i].OrderID == orderid {
+            t, err := time.Parse("2006-01-02T15:04:05", order[i].StartTime)
+            if err != nil {
+                return nil, err
+            }
+            order[i].ParsedStartTime = t
+            return &order[i], nil
+        }
+    }
+    return nil, fmt.Errorf("Could not find order ID %s in tracker.", orderid)
+}
+
 func resourceOrderRead(d *schema.ResourceData, m interface{}) error {
+    config := m.(*Config)
+    client := &http.Client{Timeout: 10 * time.Second}
+    for status, err := getOrderStatus(client, config.PhoneNumber, d.Id()); err != nil || status != "Delivered"; {
+        if err != nil {
+            return err
+        }
+        time.Sleep(10 * time.Second)
+    }
+    order, err := getOrder(client, config.PhoneNumber, d.Id())
+    if err != nil {
+        return err
+    }
+    if time.Now().Sub(order.ParsedStartTime).Hours() > 12 {
+        d.SetId("")
+    }
     return nil
 }
 
 func resourceOrderDelete(d *schema.ResourceData, m interface{}) error {
+    d.SetId("")
     return nil
 }
