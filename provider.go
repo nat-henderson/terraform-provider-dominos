@@ -57,14 +57,13 @@ func Provider() *schema.Provider {
                     },
                 },
                 ResourcesMap: map[string]*schema.Resource{
-                    "dominos_address": resourceAddress(),
                     "dominos_order": resourceOrder(),
                 },
                 DataSourcesMap: map[string]*schema.Resource{
+                    "dominos_address": dataSourceAddress(),
                     "dominos_store": dataSourceStore(),
                     "dominos_menu": dataSourceMenu(),
                     "dominos_menu_item": dataSourceMenuItem(),
-                    "dominos_tracking": dataSourceTracking(),
                 },
                 ConfigureFunc: providerConfigure,
         }

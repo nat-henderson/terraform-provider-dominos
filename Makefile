@@ -1,2 +1,2 @@
 main: *.go
-	go build -o terraform-provider-dominos ./
+	go get && go build -o terraform-provider-dominos ./

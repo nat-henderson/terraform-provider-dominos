@@ -7,11 +7,9 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-func resourceAddress() *schema.Resource {
+func dataSourceAddress() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceAddressCreate,
 		Read:   resourceAddressRead,
-		Delete: resourceAddressDelete,
 		Schema: map[string]*schema.Schema{
 			"street": &schema.Schema{
 				Type:     schema.TypeString,
@@ -45,7 +43,7 @@ func resourceAddress() *schema.Resource {
 	}
 }
 
-func resourceAddressCreate(d *schema.ResourceData, m interface{}) error {
+func resourceAddressRead(d *schema.ResourceData, m interface{}) error {
 	d.SetId("address")
 	urlobj := map[string]string{
 		"line1": d.Get("street").(string),
@@ -75,13 +73,5 @@ func resourceAddressCreate(d *schema.ResourceData, m interface{}) error {
     if err := d.Set("api_object", api_json_string); err != nil {
         return err
     }
-	return nil
-}
-
-func resourceAddressRead(d *schema.ResourceData, m interface{}) error {
-	return nil
-}
-
-func resourceAddressDelete(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
