@@ -1,22 +1,16 @@
 # Provider Purpose
 The dominos provider exists to ensure that while your cloud infrastructure is spinning up, you can have a hot pizza delivered to you.  This paradigm-shifting expansion of Terraform's "resource" model into the physical world was inspired in part by the realization that Google has a REST API for Interconnects, e.g. for people with hard-hats laying digging up the ground, laying fiber.  If you can use Terraform to summon folks with shovels to drop a fiber line, why shouldn't you be able
-to summon a teenager with a pizza?
-
-# Provider Overview
-
-The Dominos Pizza provider is made up primarily of data sources.  The only thing you can truly `Create` with this provider is, of course, an order from Dominos.
-
-Further, since Hashicorp is not extremely interested in integrating `terraform-provider-dominos` into Terraform, you will have to install the provider manually.  Follow instructions in README.md.
+to summon a driver with a pizza?
 
 # Using the Provider
 
-If you are a true Dominos afficionado, you may already know the four-digit store ID of the store closest to you, the correct json-format for your address, the six-to-ten-digit code for the item you want to order.  If you are one of those people, you can feel free to construct a `dominos_order` resource from scratch.
+## Installing the provider
 
-For the rest of us, I recommend one of each of the data sources.  They feed into each other in an obvious way.
+Download `terraform-provider-dominos` and place it in `~/.terraform.d/plugins/terraform-provider-dominos`.  Follow instructions at [Installing 3rd Party Plugins](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins)
 
 ## Sample Configuration
 
-```
+```hcl
 provider "dominos" {
   first_name = "My"
   last_name = "Name"
@@ -49,14 +43,20 @@ data "dominos_menu_item" "item" {
 
 resource "dominos_order" "order" {
   address_api_object = "${data.dominos_address.addr.api_object}"
-  item_codes = ["${data.dominos_menu_item.matches.0.code}"]
+  item_codes = ["${data.dominos_menu_item.item.matches.0.code}"]
   store_id = "${data.dominos_store.store.store_id}"
 }
 ```
 
 Now I don't know what you're going to get since I don't know what a medium philly is in your area, but in my area it gets you a 12" hand-tossed philly cheesesteak pizza, and it's pretty good.  It's all right.  Regular dominos.
 
+# Provider Overview
 
+The Dominos Pizza provider is made up primarily of data sources.  The only thing you can truly `Create` with this provider is, of course, an order from Dominos.
+
+If you are a true Dominos afficionado, you may already know the four-digit store ID of the store closest to you, the correct json-format for your address, the six-to-ten-digit code for the item you want to order.  If you are one of those people, you can feel free to construct a `dominos_order` resource from scratch.
+
+For the rest of us, I recommend one of each of the data sources.  They feed into each other in an obvious way.
 
 ## Provider Configuration
 
@@ -95,7 +95,7 @@ Each string in `query_string` must literally match the `name` of the menu item f
 
 If you would prefer to do your own filtering, you can get access to every item on the dominos menu in your area using this data source.  This data source takes in `store_id` and provides `menu`, a list of all (186, at my dominos) `name`/`code`/`price_cents` blocks.
 
-For the love of all that's holy, do not accidentally feed this data source directly into the `dominos_order`.  This will be expensive and probably pretty annoying to the Dominos store, which will be serving you 1 of each 2-liter bottle of sode, 1 of each 20oz bottle, at least 4 different kinds of salad, probably like 6 different kinds of chicken wings, and I think 12 of each kind of pizza?  (Small, medium, large) x (Hand Tossed, Pan, Stuffed Crust, Gluten Free)?  Oh plus breads.  There's breads on the menu, I found that out while trawling through API responses.  I wonder who eats those.  Are they good?  Let me know!
+For the love of all that's holy, do not accidentally feed this data source directly into the `dominos_order`.  This will be expensive and probably pretty annoying to the Dominos store, which will be serving you 1 of each 2-liter bottle of soda, 1 of each 20oz bottle, at least 4 different kinds of salad, probably like 6 different kinds of chicken wings, and I think 12 of each kind of pizza?  (Small, medium, large) x (Hand Tossed, Pan, Stuffed Crust, Gluten Free)?  Oh plus breads.  There's breads on the menu, I found that out while trawling through API responses.  I wonder who eats those.  Are they good?  Let me know!
 
 ## Resources
 
@@ -110,24 +110,24 @@ As far as I know there is no way to cancel a dominos order programmatically, so 
 
 # Warnings and Caveats
 
-1)  The author(s) of this software are not in any sense associated with Domino's Pizza.  It was an idea a bunch of us had while working on the Google provider, but this software isn't associated with Google, either.  For further details you can read LICENSE.md.
+1)  The author(s) of this software are not in any sense associated with Dominos Pizza.  It was an idea a bunch of us had while working on the Google provider, but this software isn't associated with Google, either.  For further details you can read LICENSE.md.
 
-1)  If your cloud infrastructure is kubernetes-based or otherwise slow to spin up, your pizza might arrive before your changes finish applying.  This will be very embarrassing, and potentially distracting.  Use caution.
+2)  If your cloud infrastructure is slow to spin up, your pizza might arrive before your changes finish applying.  This will be embarrassing, and potentially distracting.
 
-1)  This is not a joke provider.  Or, it kind of is a joke, but even though it's a joke it will still order you a pizza.  You are going to get a pizza.  You should be careful with this provider, if you don't want a pizza.
+3)  This is not a joke provider.  Or, it kind of is a joke, but even though it's a joke it will still order you a pizza.  You are going to get a pizza.  You should be careful with this provider, if you don't want a pizza.
 
-1)  Even if you do want a pizza, you should probably be careful with this provider.  In testing, I once nearly ordered every item on the Domino's menu, which would probably have been expensive and embarrassing.
+4)  Even if you do want a pizza, you should probably be careful with this provider.  In testing, I once nearly ordered every item on the Domino's menu, which would probably have been expensive and embarrassing.
 
-1)  You do have to put your actual credit card information into this provider, because you will, again, be purchasing and receiving a pizza.
+5)  You do have to put your actual credit card information into this provider, because you will, again, be purchasing and receiving a pizza.
 
-1)  Although all your credit card information is marked `Sensitive` in schema, that's the only protection they've got.  If your state storage isn't secure, maybe don't use this provider.  Or use a virtual card number, or something.  Be smart.  Again, real credit card, real money, real pizza.
+6)  Although all your credit card information is marked `Sensitive` in schema, that's the only protection they've got.  If your state storage isn't secure, maybe don't use this provider.  Or use a virtual card number, or COD, or something.  Be smart.  Again, real credit card, real money, real pizza.
 
-1)  I cannot emphasize enough how much you are actually going to be ordering a pizza.  Please do not be surprised when you receive a pizza and a corresponding charge to your credit card.
+7)  I cannot emphasize enough how much you are actually going to be ordering a pizza.  Please do not be surprised when you receive a pizza and a corresponding charge to your credit card.
 
-1)  As far as I know, there is no programmatic way to `destroy` an existing pizza.  `terraform destroy` is implemented on the client side, by consuming the pizza.
+8)  As far as I know, there is no programmatic way to `destroy` an existing pizza.  `terraform destroy` is implemented on the client side, by consuming the pizza.
 
-1)  The dominos API supports an astonishing amount of customization of your items.  This is where "none pizza with left beef" comes from.  You can't do any of that with this provider.  Order off the menu!
+9)  The dominos API supports an astonishing amount of customization of your items.  I think this is where "none pizza with left beef" comes from.  You can't do any of that with this provider.  Order off the menu!
 
-1)  Dominos probably exists outside the US, but I have no idea what will happen if you try to order a pizza outside the US.
+10)  Dominos probably exists outside the US, but I have no idea what will happen if you try to order a pizza outside the US.  Some quick testing suggests it just times out.
 
-1)  This provider auto-accepts Dominos' canonicalization of your address.  If you live someplace the post office doesn't know about, you might have trouble.
+11)  This provider auto-accepts Dominos' canonicalization of your address.  If you live someplace the post office doesn't know about, you might have trouble.
