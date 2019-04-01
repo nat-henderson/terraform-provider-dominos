@@ -233,6 +233,7 @@ func getOrder(client *http.Client, phonenumber, orderid string) (*OrderStatus, e
     defer r.Body.Close()
     resp := Envelope{}
     b, err := ioutil.ReadAll(r.Body)
+    log.Printf("[DEBUG] Response from tracker: %s", b)
     if err != nil {
         return nil, err
     }
