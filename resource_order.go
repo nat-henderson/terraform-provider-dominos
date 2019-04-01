@@ -177,19 +177,14 @@ func resourceOrderCreate(d *schema.ResourceData, m interface{}) error {
     if err != nil {
         return err
     }
-    orderid := order_response_obj["StoreOrderID"]
+    orderid := order_response_obj["Order"].(map[string]interface{})["StoreOrderID"]
     d.SetId(orderid.(string))
-    for status, err := getOrderStatus(client, config.PhoneNumber, d.Id()); err != nil || status != "Delivered"; {
-        if err != nil {
-            return err
-        }
-        time.Sleep(10 * time.Second)
-    }
-    return nil
+    return resourceOrderRead(d, m)
 }
 
 func getOrderStatus(client *http.Client, phonenumber, orderid string) (string, error) {
     order, err := getOrder(client, phonenumber, orderid)
+    log.Printf("[DEBUG] order: %#v", order)
     return order.OrderStatus, err
 }
 
@@ -255,11 +250,14 @@ func getOrder(client *http.Client, phonenumber, orderid string) (*OrderStatus, e
 func resourceOrderRead(d *schema.ResourceData, m interface{}) error {
     config := m.(*Config)
     client := &http.Client{Timeout: 10 * time.Second}
-    for status, err := getOrderStatus(client, config.PhoneNumber, d.Id()); err != nil || status != "Delivered"; {
-        if err != nil {
-            return err
-        }
+    var status string
+    var err error
+    for ; err == nil && status != "Complete"; status, err = getOrderStatus(client, config.PhoneNumber, d.Id()) {
         time.Sleep(10 * time.Second)
+        log.Printf("[DEBUG] checking tracker...")
+    }
+    if err != nil {
+        return err
     }
     order, err := getOrder(client, config.PhoneNumber, d.Id())
     if err != nil {
