@@ -8,6 +8,12 @@ to summon a driver with a pizza?
 
 Download [`terraform-provider-dominos`](https://github.com/ndmckinley/terraform-provider-dominos/raw/master/bin/terraform-provider-dominos) and place it in `~/.terraform.d/plugins/terraform-provider-dominos`.  Follow instructions at [Installing 3rd Party Plugins](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins)
 
+```sh
+mkdir ~/.terraform.d/plugins && \
+wget https://github.com/ndmckinley/terraform-provider-dominos/raw/master/bin/terraform-provider-dominos -O ~/.terraform.d/plugins/terraform-provider-dominos && \
+chmod +x ~/.terraform.d/plugins/terraform-provider-dominos
+```
+
 ## Sample Configuration
 
 ```hcl
