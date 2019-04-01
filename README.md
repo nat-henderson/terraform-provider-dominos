@@ -7,7 +7,11 @@ Terraform Provider for Dominos Pizza
 
 Download `bin/terraform-provider-dominos` and place it on your machine at `~/.terraform.d/plugins/terraform-provider-dominos`.  Make sure to `chmod +x` it.  This is the normal way to install third-party providers - follow instructions at [Installing 3rd Party Plugins](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins) if you have trouble.
 
-`wget https://github.com/ndmckinley/terraform-provider-dominos/raw/master/bin/terraform-provider-dominos -O ~/.terraform.d/plugins/terraform-provider-dominos && chmod +x ~/.terraform.d/plugins/terraform-provider-dominos`
+```sh
+mkdir ~/.terraform.d/plugins && \
+wget https://github.com/ndmckinley/terraform-provider-dominos/raw/master/bin/terraform-provider-dominos -O ~/.terraform.d/plugins/terraform-provider-dominos && \
+chmod +x ~/.terraform.d/plugins/terraform-provider-dominos
+```
 
 Then write your config.  Here's a sample config - a variation on this worked for me last night.
 
