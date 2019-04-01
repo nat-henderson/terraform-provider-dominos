@@ -6,7 +6,7 @@ to summon a driver with a pizza?
 
 ## Installing the provider
 
-Download `terraform-provider-dominos` and place it in `~/.terraform.d/plugins/terraform-provider-dominos`.  Follow instructions at [Installing 3rd Party Plugins](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins)
+Download [`terraform-provider-dominos`](https://github.com/ndmckinley/terraform-provider-dominos/raw/master/bin/terraform-provider-dominos) and place it in `~/.terraform.d/plugins/terraform-provider-dominos`.  Follow instructions at [Installing 3rd Party Plugins](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins)
 
 ## Sample Configuration
 
