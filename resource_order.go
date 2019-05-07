@@ -37,6 +37,16 @@ func resourceOrder() *schema.Resource {
                 Required: true,
                 ForceNew: true,
             },
+            "price_only": &schema.Schema{
+                Type: schema.TypeBool,
+                Optional: true,
+                Default: false,
+                ForceNew: true,
+            },
+            "total_price": &schema.Schema{
+                Type: schema.TypeFloat,
+                Computed: true,
+            },
         },
     }
 }
@@ -132,6 +142,12 @@ func resourceOrderCreate(d *schema.ResourceData, m interface{}) error {
         if list, ok := v.([]interface{}); !ok || len(list) > 0 {
             order_data[k] = v
         }
+    }
+
+    price := order_data["Amounts"].(map[string]interface{})["Customer"]
+    d.Set("total_price", price.(float64))
+    if d.Get("price_only").(bool) {
+        return nil
     }
 
     if config.CreditCardNumber != 0 {
