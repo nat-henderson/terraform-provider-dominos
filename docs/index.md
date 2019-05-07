@@ -60,7 +60,7 @@ Now I don't know what you're going to get since I don't know what a medium phill
 
 The Dominos Pizza provider is made up primarily of data sources.  The only thing you can truly `Create` with this provider is, of course, an order from Dominos.
 
-If you are a true Dominos afficionado, you may already know the four-digit store ID of the store closest to you, the correct json-format for your address, the six-to-ten-digit code for the item you want to order.  If you are one of those people, you can feel free to construct a `dominos_order` resource from scratch.
+If you are a true Dominos aficionado, you may already know the four-digit store ID of the store closest to you, the correct json-format for your address, the six-to-ten-digit code for the item you want to order.  If you are one of those people, you can feel free to construct a `dominos_order` resource from scratch.
 
 For the rest of us, I recommend one of each of the data sources.  They feed into each other in an obvious way.
 
@@ -78,7 +78,7 @@ The `credit_card` block requires the following fields:
 * `number`: just an integer, the whole credit card number.  The API accepts Visa, Amex, and Mastercard.
 * `cvv`: also an integer
 * `zip`: integer!
-* `date`: The experiation date, as a string, with a slash between the month and year, e.g. `03/19`.
+* `date`: The expiration date, as a string, with a slash between the month and year, e.g. `03/19`.
 
 If you don't plan to place an order, you don't need to fill this out.
 
