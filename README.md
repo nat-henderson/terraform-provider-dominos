@@ -17,24 +17,24 @@ Then write your config.  Here's a sample config - a variation on this worked for
 
 ```hcl
 provider "dominos" {
-  first_name = "My"
-  last_name = "Name"
+  first_name    = "My"
+  last_name     = "Name"
   email_address = "my@name.com"
-  phone_number = "15555555555"
+  phone_number  = "15555555555"
 
   credit_card {
     number = 123456789101112
-    cvv = 1314
-    date = "15/16"
-    zip = 18192
+    cvv    = 1314
+    date   = "15/16"
+    zip    = 18192
   }
 }
 
 data "dominos_address" "addr" {
   street = "123 Main St"
-  city = "Anytown"
-  state = "WA"
-  zip = "02122"
+  city   = "Anytown"
+  state  = "WA"
+  zip    = "02122"
 }
 
 data "dominos_store" "store" {
@@ -42,14 +42,14 @@ data "dominos_store" "store" {
 }
 
 data "dominos_menu_item" "item" {
-  store_id = "${data.dominos_store.store.store_id}"
+  store_id     = "${data.dominos_store.store.store_id}"
   query_string = ["philly", "medium"]
 }
 
 resource "dominos_order" "order" {
   address_api_object = "${data.dominos_address.addr.api_object}"
-  item_codes = ["${data.dominos_menu_item.item.matches.0.code}"]
-  store_id = "${data.dominos_store.store.store_id}"
+  item_codes         = ["${data.dominos_menu_item.item.matches.0.code}"]
+  store_id           = "${data.dominos_store.store.store_id}"
 }
 ```
 
