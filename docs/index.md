@@ -111,6 +111,7 @@ This is it!  This will order you your pizzas!  Configure it with:
 * `address_api_object`, from your `dominos_address` data source.
 * `item_codes`, a list of strings, from your `dominos_menu_item` or `dominos_menu` data source.
 * `store_id`, the ID from your `dominos_store` data source.
+* `order_type`, optional. valid options are `Delivery` or `Carryout`, defaults to `Delivery`.
 
 As far as I know there is no way to cancel a dominos order programmatically, so if you made a mistake, you'll have to call the store.  You should receive an email confirmation almost instantly, and that email will have the store's phone number in it.
 

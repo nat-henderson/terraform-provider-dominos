@@ -37,6 +37,19 @@ func resourceOrder() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
+			"order_type": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				ForceNew: true,
+				Default:  "Delivery",
+				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+					value := val.(string)
+					if value != "Delivery" && value != "Carryout" {
+						errs = append(errs, fmt.Errorf("order_type must be either 'Delivery' or 'Carryout'"))
+					}
+					return
+				},
+			},
 		},
 	}
 }
@@ -44,6 +57,7 @@ func resourceOrder() *schema.Resource {
 func resourceOrderCreate(d *schema.ResourceData, m interface{}) error {
 	var client = &http.Client{Timeout: 10 * time.Second}
 	store_id := d.Get("store_id").(string)
+	order_type := d.Get("order_type").(string)
 	address_obj := make(map[string]interface{})
 	err := json.NewDecoder(strings.NewReader(d.Get("address_api_object").(string))).Decode(&address_obj)
 	if err != nil {
@@ -63,7 +77,7 @@ func resourceOrderCreate(d *schema.ResourceData, m interface{}) error {
 		"Products":              []map[string]interface{}{},
 		"Market":                "",
 		"Currency":              "",
-		"ServiceMethod":         "Delivery",
+		"ServiceMethod":         order_type,
 		"Tags":                  map[string]string{},
 		"Version":               "1.0",
 		"SourceOrganizationURI": "order.dominos.com",
