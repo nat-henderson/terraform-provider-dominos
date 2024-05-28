@@ -1,5 +1,5 @@
 # Provider Purpose
-The dominos provider exists to ensure that while your cloud infrastructure is spinning up, you can have a hot pizza delivered to you.  This paradigm-shifting expansion of Terraform's "resource" model into the physical world was inspired in part by the realization that Google has a REST API for Interconnects, e.g. for people with hard-hats laying digging up the ground, laying fiber.  If you can use Terraform to summon folks with shovels to drop a fiber line, why shouldn't you be able
+The dominos provider exists to ensure that while your cloud infrastructure is spinning up, you can have a hot pizza delivered to you.  This paradigm-shifting expansion of Terraform's "resource" model into the physical world was inspired in part by the realization that Google has a REST API for Interconnects, e.g. for people with hard-hats digging up the ground, laying fiber.  If you can use Terraform to summon folks with shovels to drop a fiber line, why shouldn't you be able
 to summon a driver with a pizza?
 
 # Using the Provider
