@@ -4,6 +4,7 @@ Terraform Provider for Dominos Pizza
 # [Documentation](https://nat-henderson.github.io/terraform-provider-dominos/)
 
 # Quickstart
+# Quickstart
 
 Download `bin/terraform-provider-dominos` and place it on your machine at `~/.terraform.d/plugins/terraform-provider-dominos`.  Make sure to `chmod +x` it.  This is the normal way to install third-party providers - follow instructions at [Installing 3rd Party Plugins](https://www.terraform.io/docs/configuration/providers.html#third-party-plugins) if you have trouble.
 
